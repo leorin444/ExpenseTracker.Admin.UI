@@ -7,18 +7,21 @@ import { API_BASE_URL } from '../config';
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { currentUser } = useAuth();
 
   useEffect(() => {
     async function fetchStats() {
+      setError(null);
       try {
         const token = await currentUser.getIdToken();
         const response = await axios.get(`${API_BASE_URL}/reports/system-totals`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setStats(response.data);
-      } catch (error) {
-        console.error("Failed to fetch stats", error);
+      } catch (err) {
+        console.error("Failed to fetch stats", err);
+        setError("Failed to load dashboard stats. Please try refreshing.");
       } finally {
         setLoading(false);
       }
@@ -33,11 +36,23 @@ export default function Dashboard() {
     return <div className="text-gray-500 p-4">Loading dashboard...</div>;
   }
 
+  if (error) {
+    return (
+      <div className="p-6 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+        {error}
+        <button
+          onClick={() => { setLoading(true); setError(null); }}
+          className="ml-4 underline font-medium"
+        >Retry</button>
+      </div>
+    );
+  }
+
   const cards = [
-    { name: 'Total Users', value: stats?.TotalUsers || 0, icon: Users, color: 'text-blue-500', bg: 'bg-blue-100' },
-    { name: 'Total Categories', value: stats?.TotalCategories || 0, icon: LayoutDashboard, color: 'text-purple-500', bg: 'bg-purple-100' },
-    { name: 'Total Expenses', value: stats?.TotalExpensesCount || 0, icon: Receipt, color: 'text-orange-500', bg: 'bg-orange-100' },
-    { name: 'System Volume ($)', value: `$${Number(stats?.TotalSystemExpenses || 0).toFixed(2)}`, icon: DollarSign, color: 'text-green-500', bg: 'bg-green-100' },
+    { name: 'Total Users', value: stats?.TotalUsers ?? 0, icon: Users, color: 'text-blue-500', bg: 'bg-blue-100' },
+    { name: 'Total Categories', value: stats?.TotalCategories ?? 0, icon: LayoutDashboard, color: 'text-purple-500', bg: 'bg-purple-100' },
+    { name: 'Total Expenses', value: stats?.TotalExpensesCount ?? 0, icon: Receipt, color: 'text-orange-500', bg: 'bg-orange-100' },
+    { name: 'System Volume ($)', value: `$${Number(stats?.TotalSystemExpenses ?? 0).toFixed(2)}`, icon: DollarSign, color: 'text-green-500', bg: 'bg-green-100' },
   ];
 
   return (

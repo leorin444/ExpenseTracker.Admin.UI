@@ -18,6 +18,7 @@ import {
 export default function Reports() {
   const [reportData, setReportData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { currentUser } = useAuth();
 
   useEffect(() => {
@@ -28,14 +29,16 @@ export default function Reports() {
 
   async function fetchReportData() {
     setLoading(true);
+    setError(null);
     try {
       const token = await currentUser.getIdToken();
       const response = await axios.get(`${API_BASE_URL}/reports/analytics`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setReportData(response.data);
-    } catch (error) {
-      console.error("Failed to load report analytics", error);
+    } catch (err) {
+      console.error("Failed to load report analytics", err);
+      setError("Failed to load reports. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -46,6 +49,15 @@ export default function Reports() {
       <div className="p-12 text-center text-gray-500 flex flex-col items-center justify-center">
         <RefreshCw className="h-8 w-8 animate-spin text-indigo-600 mb-3" />
         <p className="font-medium">Aggregating database reports & financial metrics...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm flex items-center justify-between">
+        <span>{error}</span>
+        <button onClick={fetchReportData} className="ml-4 underline font-medium">Retry</button>
       </div>
     );
   }
