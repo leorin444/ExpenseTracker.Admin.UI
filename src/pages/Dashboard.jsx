@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Users, LayoutDashboard, Receipt, DollarSign } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL, formatCurrency } from '../config';
 
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
@@ -52,7 +52,7 @@ export default function Dashboard() {
     { name: 'Total Users', value: stats?.TotalUsers ?? 0, icon: Users, color: 'text-blue-500', bg: 'bg-blue-100' },
     { name: 'Total Categories', value: stats?.TotalCategories ?? 0, icon: LayoutDashboard, color: 'text-purple-500', bg: 'bg-purple-100' },
     { name: 'Total Expenses', value: stats?.TotalExpensesCount ?? 0, icon: Receipt, color: 'text-orange-500', bg: 'bg-orange-100' },
-    { name: 'System Volume ($)', value: `$${Number(stats?.TotalSystemExpenses ?? 0).toFixed(2)}`, icon: DollarSign, color: 'text-green-500', bg: 'bg-green-100' },
+    { name: 'System Volume (NPR)', value: formatCurrency(stats?.TotalSystemExpenses), icon: DollarSign, color: 'text-green-500', bg: 'bg-green-100' },
   ];
 
   return (

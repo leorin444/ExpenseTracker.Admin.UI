@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL, formatCurrency } from '../config';
 import { Trash2, RefreshCw, Search, Filter, Calendar, Receipt, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function Expenses() {
@@ -79,7 +79,7 @@ export default function Expenses() {
   }
 
   async function handleDeleteExpense(expense) {
-    if (!window.confirm(`Are you sure you want to delete this expense of $${expense.Amount}?`)) {
+    if (!window.confirm(`Are you sure you want to delete this expense of ${formatCurrency(expense.Amount)}?`)) {
       return;
     }
 
@@ -206,7 +206,7 @@ export default function Expenses() {
                     {expense.Description || '-'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
-                    ${Number(expense.Amount || 0).toFixed(2)}
+                    {formatCurrency(expense.Amount)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-xs text-gray-500">
                     {expense.ExpenseDate ? new Date(expense.ExpenseDate).toLocaleDateString() : 'N/A'}

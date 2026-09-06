@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL, formatCurrency } from '../config';
 import { 
   BarChart3, 
   TrendingUp, 
@@ -99,7 +99,7 @@ export default function Reports() {
             <div>
               <p className="text-xs font-semibold uppercase text-gray-400">Total System Volume</p>
               <p className="text-2xl font-bold text-gray-900 mt-1">
-                ${totalVolume.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                {formatCurrency(totalVolume)}
               </p>
             </div>
             <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
@@ -127,7 +127,7 @@ export default function Reports() {
             <div>
               <p className="text-xs font-semibold uppercase text-gray-400">Average Expense</p>
               <p className="text-2xl font-bold text-gray-900 mt-1">
-                ${Number(totals.AverageExpenseAmount || 0).toFixed(2)}
+                {formatCurrency(totals.AverageExpenseAmount)}
               </p>
             </div>
             <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
@@ -173,7 +173,7 @@ export default function Reports() {
                   <div key={month.MonthYear} className="space-y-1.5">
                     <div className="flex justify-between text-xs font-semibold">
                       <span className="text-gray-700">{month.MonthYear}</span>
-                      <span className="text-gray-900">${amount.toFixed(2)} ({month.ExpenseCount} txns)</span>
+                      <span className="text-gray-900">{formatCurrency(amount)} ({month.ExpenseCount} txns)</span>
                     </div>
                     <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
                       <div 
@@ -216,7 +216,7 @@ export default function Reports() {
                         {cat.CategoryName}
                       </span>
                       <span className="text-gray-900">
-                        ${amount.toFixed(2)} ({percent}%)
+                        {formatCurrency(amount)} ({percent}%)
                       </span>
                     </div>
                     <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
@@ -271,7 +271,7 @@ export default function Reports() {
                       {user.ExpenseCount} expenses
                     </td>
                     <td className="px-6 py-3.5 whitespace-nowrap text-sm font-bold text-emerald-600 text-right">
-                      ${Number(user.TotalAmount || 0).toFixed(2)}
+                      {formatCurrency(user.TotalAmount)}
                     </td>
                   </tr>
                 ))}

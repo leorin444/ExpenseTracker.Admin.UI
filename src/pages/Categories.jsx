@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL, formatCurrency } from '../config';
 import { Plus, Trash2, RefreshCw, FolderKanban, Search, Tag, DollarSign, Receipt } from 'lucide-react';
 
 const PRESET_COLORS = [
@@ -189,7 +189,7 @@ export default function Categories() {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-emerald-600">
-                    ${Number(cat.TotalSpend || 0).toFixed(2)}
+                    {formatCurrency(cat.TotalSpend)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button
